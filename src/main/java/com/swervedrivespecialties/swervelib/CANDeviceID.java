@@ -2,7 +2,6 @@ package com.swervedrivespecialties.swervelib;
 
 public class CANDeviceID {
     public static final String kRioBusName = "rio";
-    public static final String kCanivoreBusName = "canivoer";
 
     public String bus;
     public int id;
