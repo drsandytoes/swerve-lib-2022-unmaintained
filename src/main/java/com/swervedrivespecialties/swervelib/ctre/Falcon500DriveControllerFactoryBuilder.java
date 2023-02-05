@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.swervedrivespecialties.swervelib.CANDeviceID;
 import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.DriveControllerFactory;
 import com.swervedrivespecialties.swervelib.ModuleConfiguration;
@@ -28,7 +29,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
         return Double.isFinite(nominalVoltage);
     }
 
-    public DriveControllerFactory<ControllerImplementation, Integer> build() {
+    public DriveControllerFactory<ControllerImplementation, CANDeviceID> build() {
         return new FactoryImplementation();
     }
 
@@ -41,9 +42,9 @@ public final class Falcon500DriveControllerFactoryBuilder {
         return Double.isFinite(currentLimit);
     }
 
-    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
+    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, CANDeviceID> {
         @Override
-        public ControllerImplementation create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
+        public ControllerImplementation create(CANDeviceID driveConfiguration, ModuleConfiguration moduleConfiguration) {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
             double sensorPositionCoefficient = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction() / TICKS_PER_ROTATION;
@@ -58,7 +59,8 @@ public final class Falcon500DriveControllerFactoryBuilder {
                 motorConfiguration.supplyCurrLimit.enable = true;
             }
 
-            TalonFX motor = new TalonFX(driveConfiguration);
+            CANDeviceID deviceID = driveConfiguration;
+            TalonFX motor = new TalonFX(deviceID.id, deviceID.bus);
             CtreUtils.checkCtreError(motor.configAllSettings(motorConfiguration), "Failed to configure Falcon 500");
 
             if (hasVoltageCompensation()) {

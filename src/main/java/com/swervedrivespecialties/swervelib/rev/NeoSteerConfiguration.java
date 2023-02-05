@@ -1,17 +1,18 @@
 package com.swervedrivespecialties.swervelib.rev;
 
+import com.swervedrivespecialties.swervelib.CANDeviceID;
 import java.util.Objects;
 
 public class NeoSteerConfiguration<EncoderConfiguration> {
-    private final int motorPort;
+    private final CANDeviceID motorPort;
     private final EncoderConfiguration encoderConfiguration;
 
-    public NeoSteerConfiguration(int motorPort, EncoderConfiguration encoderConfiguration) {
+    public NeoSteerConfiguration(CANDeviceID motorPort, EncoderConfiguration encoderConfiguration) {
         this.motorPort = motorPort;
         this.encoderConfiguration = encoderConfiguration;
     }
 
-    public int getMotorPort() {
+    public CANDeviceID getMotorPort() {
         return motorPort;
     }
 
@@ -24,7 +25,7 @@ public class NeoSteerConfiguration<EncoderConfiguration> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NeoSteerConfiguration<?> that = (NeoSteerConfiguration<?>) o;
-        return getMotorPort() == that.getMotorPort() && getEncoderConfiguration().equals(that.getEncoderConfiguration());
+        return getMotorPort().equals(that.getMotorPort()) && getEncoderConfiguration().equals(that.getEncoderConfiguration());
     }
 
     @Override

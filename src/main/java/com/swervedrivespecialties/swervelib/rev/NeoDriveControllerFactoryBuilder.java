@@ -1,5 +1,6 @@
 package com.swervedrivespecialties.swervelib.rev;
 
+import com.swervedrivespecialties.swervelib.CANDeviceID;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -31,14 +32,14 @@ public final class NeoDriveControllerFactoryBuilder {
         return Double.isFinite(currentLimit);
     }
 
-    public DriveControllerFactory<ControllerImplementation, Integer> build() {
+    public DriveControllerFactory<ControllerImplementation, CANDeviceID> build() {
         return new FactoryImplementation();
     }
 
-    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
+    private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, CANDeviceID> {
         @Override
-        public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) {
-            CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
+        public ControllerImplementation create(CANDeviceID id, ModuleConfiguration moduleConfiguration) {
+            CANSparkMax motor = new CANSparkMax(id.id, CANSparkMaxLowLevel.MotorType.kBrushless);
             motor.setInverted(moduleConfiguration.isDriveInverted());
 
             // Setup voltage compensation

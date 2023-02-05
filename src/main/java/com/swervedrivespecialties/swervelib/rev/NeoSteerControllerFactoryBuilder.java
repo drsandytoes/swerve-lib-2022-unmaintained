@@ -65,7 +65,9 @@ public final class NeoSteerControllerFactoryBuilder {
         public ControllerImplementation create(NeoSteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) {
             com.swervedrivespecialties.swervelib.AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
-            CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
+            // MDS: I guess you can't create SparkMaxes on a secondary CAN bus?
+            CANDeviceID deviceID = steerConfiguration.getMotorPort();
+            CANSparkMax motor = new CANSparkMax(deviceID.id, CANSparkMaxLowLevel.MotorType.kBrushless);
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
